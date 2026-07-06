@@ -1,0 +1,31 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", sans-serif;
+
+  /* Warna tema Kaleungitan */
+  --color-primary: #0058be;
+  --color-on-primary: #ffffff;
+  --color-primary-container: #2170e4;
+  --color-secondary: #505f76;
+  --color-secondary-container: #d0e1fb;
+  --color-on-secondary-container: #54647a;
+  --color-surface: #f9f9ff;
+  --color-surface-container-lowest: #ffffff;
+  --color-surface-container-low: #f2f3fd;
+  --color-surface-container: #ecedf7;
+  --color-surface-container-high: #e6e7f2;
+  --color-on-surface: #191b23;
+  --color-on-surface-variant: #424754;
+  --color-outline-variant: #c2c6d6;
+  --color-error: #ba1a1a;
+  --color-error-container: #ffdad6;
+}
+
+body {
+  font-family: "Inter", sans-serif;
+}
+
+.material-symbols-outlined {
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}
