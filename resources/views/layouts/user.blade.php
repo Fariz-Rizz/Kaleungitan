@@ -24,12 +24,12 @@
             <nav class="hidden md:flex items-center gap-6 text-sm">
                 <a href="{{ route('browse.items') }}"
                     class="{{ request()->routeIs('browse.items') ? 'text-primary font-semibold border-b-2 border-primary pb-1' : 'text-on-surface-variant hover:text-primary transition-colors' }}">
-                    Browse Items
+                    Browse
                 </a>
                 <div class="relative" x-data="{ openReport: false }">
                     <button @click="openReport = !openReport"
                         class="text-on-surface-variant hover:text-primary transition-colors flex items-center gap-1">
-                        Lapor Barang
+                        Report
                         <span class="material-symbols-outlined text-sm">expand_more</span>
                     </button>
                     <div x-show="openReport" @click.outside="openReport = false" x-cloak

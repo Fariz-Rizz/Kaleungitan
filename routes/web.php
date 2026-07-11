@@ -21,7 +21,7 @@ Route::middleware('auth')->group(function () {
 
     Route::view('/browse', 'user.browse')->name('browse.items');
     Route::get('/items/{item}', [ItemController::class, 'show'])->name('items.show');
-    Route::view('/items/{item}/claim', 'user.claim')->name('items.claim');
+    Route::get('/items/{item}/claim', [ItemController::class, 'claim'])->name('items.claim');
 
     Route::view('/report/lost', 'user.report-lost')->name('report.lost');
     Route::view('/report/found', 'user.report-found')->name('report.found');

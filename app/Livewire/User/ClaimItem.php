@@ -11,19 +11,20 @@ class ClaimItem extends Component
     public Item $item;
     public string $description = '';
 
-    public function mount(int $item)
-    {
-        $this->item = Item::with('category')->findOrFail($item);
+    public function mount(Item $item)
+{
+    $item->loadMissing('category');
+    $this->item = $item;
 
-        // Guard: pastikan barang ini benar bisa diklaim
-        abort_if($this->item->type !== 'temuan', 403, 'Barang ini bukan barang temuan.');
-        abort_if($this->item->user_id === auth()->id(), 403, 'Kamu tidak bisa mengklaim laporanmu sendiri.');
-        abort_if(in_array($this->item->status, ['claimed', 'resolved']), 403, 'Barang ini sudah diklaim.');
+    // Guard: pastikan barang ini benar bisa diklaim
+    abort_if($this->item->type !== 'temuan', 403, 'Barang ini bukan barang temuan.');
+    abort_if($this->item->user_id === auth()->id(), 403, 'Kamu tidak bisa mengklaim laporanmu sendiri.');
+    abort_if(in_array($this->item->status, ['claimed', 'resolved']), 403, 'Barang ini sudah diklaim.');
 
-        if (Claim::where('item_id', $this->item->id)->where('user_id', auth()->id())->exists()) {
-            abort(403, 'Kamu sudah pernah mengajukan klaim untuk barang ini.');
-        }
+    if (Claim::where('item_id', $this->item->id)->where('user_id', auth()->id())->exists()) {
+        abort(403, 'Kamu sudah pernah mengajukan klaim untuk barang ini.');
     }
+}
 
     protected function rules()
     {

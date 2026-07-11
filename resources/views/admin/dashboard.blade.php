@@ -117,22 +117,89 @@
 
     </div>
 
-    {{-- Recent Activity Table --}}
-    <div class="bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant overflow-hidden">
-        <div class="p-6 border-b border-outline-variant flex items-center justify-between">
-            <h3 class="text-lg font-semibold">Aktivitas Terbaru</h3>
-            <div class="flex gap-2">
-                <button class="bg-surface-container-low text-on-surface-variant px-4 py-2 rounded-lg text-sm flex items-center gap-2">
-                    <span class="material-symbols-outlined text-sm">filter_list</span> Filter
-                </button>
-                <button class="bg-primary text-on-primary px-4 py-2 rounded-lg text-sm flex items-center gap-2">
-                    <span class="material-symbols-outlined text-sm">download</span> Export
-                </button>
+{{-- Recent Activity Table --}}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+
+<div class="bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant overflow-hidden">
+    <div class="p-6 border-b border-outline-variant flex items-center justify-between">
+        <h3 class="text-lg font-semibold">Aktivitas Terbaru</h3>
+        <div class="flex gap-2">
+            <button class="bg-surface-container-low text-on-surface-variant px-4 py-2 rounded-lg text-sm flex items-center gap-2 transition-colors duration-150 hover:bg-surface-container active:scale-95">
+                <span class="material-symbols-outlined text-sm">filter_list</span> Filter
+            </button>
+            <button id="exportBtn"
+                class="bg-primary text-on-primary px-4 py-2 rounded-lg text-sm flex items-center gap-2 transition-all duration-150 hover:opacity-90 hover:shadow-md active:scale-95 active:opacity-80 disabled:opacity-50 disabled:cursor-not-allowed">
+                <span class="material-symbols-outlined text-sm">download</span> Export
+            </button>
+        </div>
+    </div>
+    {{-- ... isi table activityTable tetap di sini ... --}}
+</div>
+
+<script>
+document.getElementById('exportBtn').addEventListener('click', function () {
+    const btn = this;
+    const originalHTML = btn.innerHTML;
+
+    btn.disabled = true;
+    btn.innerHTML = '<span class="material-symbols-outlined text-sm animate-spin">progress_activity</span> Exporting...';
+
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+
+    doc.setFontSize(16);
+    doc.text('Aktivitas Terbaru', 14, 22);
+
+    const head = [['Barang', 'Tipe', 'Pelapor', 'Tanggal', 'Status']];
+    const body = [];
+
+    document.querySelectorAll('#activityTable tbody tr').forEach(tr => {
+        const cells = tr.querySelectorAll('td');
+        if (cells.length < 6) return; // skip baris "Belum ada laporan"
+
+        const namaBarang = cells[0].querySelector('p.font-medium')?.textContent.trim() || '';
+        const tipe = cells[1].textContent.trim();
+        const pelapor = cells[2].textContent.trim();
+        const tanggal = cells[3].textContent.trim();
+        const status = cells[4].textContent.trim();
+        // cells[5] (Aksi/tombol "Lihat") sengaja dilewati, tidak relevan untuk PDF
+
+        body.push([namaBarang, tipe, pelapor, tanggal, status]);
+    });
+
+    doc.autoTable({
+        head: head,
+        body: body,
+        startY: 30,
+        theme: 'grid',
+        headStyles: {
+            fillColor: [41, 98, 255],
+            textColor: 255,
+            fontStyle: 'bold',
+        },
+        alternateRowStyles: {
+            fillColor: [245, 245, 245],
+        },
+        styles: {
+            fontSize: 10,
+            cellPadding: 3,
+        },
+    });
+
+    doc.save('aktivitas_terbaru.pdf');
+
+    setTimeout(() => {
+        btn.disabled = false;
+        btn.innerHTML = originalHTML;
+    }, 500);
+});</script>
             </div>
         </div>
 
         <div class="overflow-x-auto">
-            <table class="w-full text-left border-collapse">
+            <table id="activityTable" class="w-full text-left border-collapse"
+            class="w-full text-left border-collapse">
                 <thead>
                     <tr class="bg-surface-container-low border-b border-outline-variant">
                         <th class="p-4 text-xs font-semibold uppercase tracking-wider">Barang</th>
@@ -191,8 +258,11 @@
                                 </span>
                             </td>
                             <td class="p-4 text-right">
-                                <button class="text-primary hover:bg-primary/5 px-3 py-1 rounded-md text-sm font-semibold">Lihat</button>
-                            </td>
+    <a href="{{ route('items.show', $a) }}"
+       class="text-primary hover:bg-primary/5 px-3 py-1 rounded-md text-sm font-semibold inline-block transition-colors">
+        Lihat
+    </a>
+</td>
                         </tr>
                     @empty
                         <tr>
@@ -203,7 +273,7 @@
                     @endforelse
 
                 </tbody>
-            </table>
+            </id=>
         </div>
 
         <div class="p-4 bg-surface-container-low/30 flex items-center justify-between border-t border-outline-variant">
