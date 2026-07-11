@@ -1,16 +1,19 @@
 <!DOCTYPE html>
 <html lang="id" class="light">
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'Dashboard') | Kaleungitan Admin</title>
 
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet">
 
     @livewireStyles
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
+
 <body class="bg-surface text-on-surface">
 
     <!-- Sidebar -->
@@ -23,7 +26,7 @@
 
             <nav class="flex-1 px-2 mt-4 space-y-1">
                 <a href="{{ route('admin.dashboard') }}"
-                   class="flex items-center gap-3 px-4 py-3 rounded-lg transition-colors
+                    class="flex items-center gap-3 px-4 py-3 rounded-lg transition-colors
                           {{ request()->routeIs('admin.dashboard') ? 'bg-secondary-container text-on-secondary-container border-l-4 border-primary' : 'text-on-surface-variant hover:bg-surface-container-low' }}">
                     <span class="material-symbols-outlined">dashboard</span>
                     <span>Dashboard</span>
@@ -59,9 +62,10 @@
             </nav>
 
             <div class="p-4">
-                <form method="POST" action="{{ route('logout') }}">
+                <form method="POST" action="{{ route('admin.logout') }}">
                     @csrf
-                    <button type="submit" class="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-error hover:bg-error-container/30 transition-colors">
+                    <button type="submit"
+                        class="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-error hover:bg-error-container/30 transition-colors">
                         <span class="material-symbols-outlined">logout</span>
                         <span>Logout</span>
                     </button>
@@ -74,7 +78,8 @@
     <div class="ml-[260px] min-h-screen">
 
         <!-- Header -->
-        <header class="sticky top-0 z-30 bg-surface/80 backdrop-blur border-b border-outline-variant px-8 py-4 flex items-center justify-between">
+        <header
+            class="sticky top-0 z-30 bg-surface/80 backdrop-blur border-b border-outline-variant px-8 py-4 flex items-center justify-between">
             <div class="flex items-center gap-2 w-96 bg-surface-container-low rounded-lg px-4 py-2">
                 <span class="material-symbols-outlined text-on-surface-variant text-lg">search</span>
                 <input type="text" placeholder="Cari laporan..." class="bg-transparent outline-none text-sm w-full">
@@ -85,7 +90,8 @@
                     <span class="material-symbols-outlined">notifications</span>
                 </button>
                 <div class="flex items-center gap-2">
-                    <div class="w-9 h-9 rounded-full bg-secondary-container flex items-center justify-center text-on-secondary-container font-semibold text-sm">
+                    <div
+                        class="w-9 h-9 rounded-full bg-secondary-container flex items-center justify-center text-on-secondary-container font-semibold text-sm">
                         A
                     </div>
                     <span class="text-sm font-medium">Admin</span>
@@ -101,4 +107,5 @@
     </div>
     @livewireScripts
 </body>
+
 </html>

@@ -3,19 +3,28 @@
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Auth\AdminAuthenticatedSessionController;
+use App\Http\Controllers\ItemController;
 
 Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::view('/dashboard', 'user.dashboard')->middleware(['auth'])->name('dashboard');
+Route::view('/browse-items', 'user.browse')->middleware(['auth'])->name('browse-items');
+Route::view('/report-item', 'user.report')->middleware(['auth'])->name('report-item');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    Route::view('/browse', 'user.browse')->name('browse.items');
+    Route::get('/items/{item}', [ItemController::class, 'show'])->name('items.show');
+    Route::view('/items/{item}/claim', 'user.claim')->name('items.claim');
+
+    Route::view('/report/lost', 'user.report-lost')->name('report.lost');
+    Route::view('/report/found', 'user.report-found')->name('report.found');
 });
 
 Route::middleware(['auth', 'admin'])->group(function () {
@@ -26,4 +35,13 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::view('/admin/users', 'admin.users')->name('admin.users');
 });
 
-require __DIR__.'/auth.php';
+Route::middleware('guest')->group(function () {
+    Route::get('/admin/login', [AdminAuthenticatedSessionController::class, 'create'])->name('admin.login');
+    Route::post('/admin/login', [AdminAuthenticatedSessionController::class, 'store'])->name('admin.login.store');
+});
+
+Route::post('/admin/logout', [AdminAuthenticatedSessionController::class, 'destroy'])
+    ->middleware('auth')
+    ->name('admin.logout');
+
+require __DIR__ . '/auth.php';

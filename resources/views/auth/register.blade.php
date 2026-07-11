@@ -9,8 +9,9 @@
         {{-- Name --}}
         <div>
             <label for="name" class="block text-xs font-medium text-on-surface-variant mb-1">Nama Lengkap</label>
-            <input id="name" type="text" name="name" value="{{ old('name') }}" required autofocus autocomplete="name"
-                   class="w-full px-3 py-2 bg-surface-container-low border-none rounded-lg text-sm focus:ring-2 focus:ring-primary">
+            <input id="name" type="text" name="name" value="{{ old('name') }}" required autofocus
+                autocomplete="name"
+                class="w-full px-3 py-2 bg-surface-container-low border-none rounded-lg text-sm focus:ring-2 focus:ring-primary">
             @error('name')
                 <span class="text-error text-xs">{{ $message }}</span>
             @enderror
@@ -19,8 +20,9 @@
         {{-- Email --}}
         <div>
             <label for="email" class="block text-xs font-medium text-on-surface-variant mb-1">Email</label>
-            <input id="email" type="email" name="email" value="{{ old('email') }}" required autocomplete="username"
-                   class="w-full px-3 py-2 bg-surface-container-low border-none rounded-lg text-sm focus:ring-2 focus:ring-primary">
+            <input id="email" type="email" name="email" value="{{ old('email') }}" required
+                autocomplete="username"
+                class="w-full px-3 py-2 bg-surface-container-low border-none rounded-lg text-sm focus:ring-2 focus:ring-primary">
             @error('email')
                 <span class="text-error text-xs">{{ $message }}</span>
             @enderror
@@ -30,7 +32,7 @@
         <div>
             <label for="password" class="block text-xs font-medium text-on-surface-variant mb-1">Password</label>
             <input id="password" type="password" name="password" required autocomplete="new-password"
-                   class="w-full px-3 py-2 bg-surface-container-low border-none rounded-lg text-sm focus:ring-2 focus:ring-primary">
+                class="w-full px-3 py-2 bg-surface-container-low border-none rounded-lg text-sm focus:ring-2 focus:ring-primary">
             @error('password')
                 <span class="text-error text-xs">{{ $message }}</span>
             @enderror
@@ -38,16 +40,18 @@
 
         {{-- Confirm Password --}}
         <div>
-            <label for="password_confirmation" class="block text-xs font-medium text-on-surface-variant mb-1">Konfirmasi Password</label>
-            <input id="password_confirmation" type="password" name="password_confirmation" required autocomplete="new-password"
-                   class="w-full px-3 py-2 bg-surface-container-low border-none rounded-lg text-sm focus:ring-2 focus:ring-primary">
+            <label for="password_confirmation" class="block text-xs font-medium text-on-surface-variant mb-1">Konfirmasi
+                Password</label>
+            <input id="password_confirmation" type="password" name="password_confirmation" required
+                autocomplete="new-password"
+                class="w-full px-3 py-2 bg-surface-container-low border-none rounded-lg text-sm focus:ring-2 focus:ring-primary">
             @error('password_confirmation')
                 <span class="text-error text-xs">{{ $message }}</span>
             @enderror
         </div>
 
         <button type="submit"
-                class="w-full bg-primary text-on-primary py-2.5 rounded-lg text-sm font-semibold hover:opacity-90 transition-opacity">
+            class="w-full bg-primary text-on-primary py-2.5 rounded-lg text-sm font-semibold hover:opacity-90 transition-opacity">
             Daftar
         </button>
 
