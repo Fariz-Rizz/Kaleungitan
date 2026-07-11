@@ -19,4 +19,9 @@ class ItemController extends Controller
 
         return view('user.item-detail', compact('item', 'existingClaim'));
     }
+
+    public function claim(Item $item): View
+    {
+        return view('user.claim', compact('item'));
+    }
 }

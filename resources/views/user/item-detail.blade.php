@@ -4,10 +4,10 @@
 
 @section('content')
 
-    <a href="{{ route('browse.items') }}"
+    <a  href="{{ url()->previous() }}"
         class="inline-flex items-center gap-1 text-sm text-on-surface-variant hover:text-primary mb-6">
         <span class="material-symbols-outlined text-lg">arrow_back</span>
-        Kembali ke Daftar
+        Kembali
     </a>
 
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">

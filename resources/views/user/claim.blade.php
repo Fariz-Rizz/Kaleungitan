@@ -3,5 +3,5 @@
 @section('title', 'Ajukan Klaim')
 
 @section('content')
-    @livewire('user.claim-item', ['item' => $item->id])
+    @livewire('user.claim-item', ['item' => $item])
 @endsection
