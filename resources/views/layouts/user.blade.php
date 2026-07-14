@@ -91,7 +91,13 @@
                     </button>
 
                     <div x-show="open" @click.outside="open = false" x-cloak
-                        class="absolute bottom-full left-0 mb-2 w-full bg-surface-container-lowest rounded-lg shadow-lg border border-outline-variant py-2 text-sm z-50">
+                        class="absolute right-0 mt-2 w-48 bg-surface-container-lowest rounded-lg shadow-lg border border-outline-variant py-2 text-sm">
+                        <div class="px-4 py-2 border-b border-outline-variant">
+                            <p class="font-medium">{{ auth()->user()->name }}</p>
+                            <p class="text-xs text-on-surface-variant">{{ auth()->user()->email }}</p>
+                        </div>
+                        <a href="{{ route('profile.edit') }}" class="block px-4 py-2 hover:bg-surface-container-low">My
+                            Profile</a>
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
                             <button type="submit"
