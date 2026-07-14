@@ -39,4 +39,13 @@ class User extends Authenticatable
     {
         return $this->hasMany(Claim::class);
     }
+
+    /**
+     * Scope query hanya untuk user dengan role admin.
+     * Contoh pakai: User::admins()->get()
+     */
+    public function scopeAdmins($query)
+    {
+        return $query->where('role', 'admin');
+    }
 }

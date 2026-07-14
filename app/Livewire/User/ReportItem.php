@@ -4,6 +4,9 @@ namespace App\Livewire\User;
 
 use App\Models\Category;
 use App\Models\Item;
+use App\Models\User;
+use App\Notifications\NewItemReportNotification;
+use Illuminate\Support\Facades\Notification;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
@@ -75,6 +78,13 @@ class ReportItem extends Component
             'photo' => $photoPath,
             'status' => 'pending',
         ]);
+
+        // Beri tahu semua admin bahwa ada laporan baru yang perlu diverifikasi
+        $item->setRelation('user', auth()->user());
+        Notification::send(
+            User::admins()->where('id', '!=', auth()->id())->get(),
+            new NewItemReportNotification($item)
+        );
 
         session()->flash('success', 'Laporan berhasil dikirim! Menunggu verifikasi admin.');
 

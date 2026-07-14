@@ -47,9 +47,7 @@
             </nav>
 
             <div class="flex items-center gap-3" x-data="{ open: false }">
-                <button class="p-2 rounded-full hover:bg-surface-container-low text-on-surface-variant">
-                    <span class="material-symbols-outlined">notifications</span>
-                </button>
+                @livewire('user.notification-bell')
 
                 <div class="relative">
                     <button @click="open = !open"

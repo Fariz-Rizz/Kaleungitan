@@ -291,9 +291,4 @@ document.getElementById('exportBtn').addEventListener('click', function () {
         </div>
     </div>
 
-    {{-- FAB Button --}}
-    <button class="fixed bottom-8 right-8 w-14 h-14 bg-primary text-on-primary rounded-full shadow-lg flex items-center justify-center hover:scale-105 transition-transform">
-        <span class="material-symbols-outlined text-2xl">add</span>
-    </button>
-
 @endsection
