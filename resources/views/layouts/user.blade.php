@@ -64,8 +64,8 @@
                             <p class="font-medium">{{ auth()->user()->name }}</p>
                             <p class="text-xs text-on-surface-variant">{{ auth()->user()->email }}</p>
                         </div>
-                        <a href="{{ route('dashboard') }}" class="block px-4 py-2 hover:bg-surface-container-low">My
-                            Dashboard</a>
+                        <a href="{{ route('profile.edit') }}" class="block px-4 py-2 hover:bg-surface-container-low">My
+                            Profile</a>
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
                             <button type="submit"
