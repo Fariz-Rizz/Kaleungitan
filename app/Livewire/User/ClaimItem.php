@@ -4,6 +4,10 @@ namespace App\Livewire\User;
 
 use App\Models\Item;
 use App\Models\Claim;
+use App\Models\User;
+use App\Notifications\AdminNewClaimNotification;
+use App\Notifications\NewClaimNotification;
+use Illuminate\Support\Facades\Notification;
 use Livewire\Component;
 
 class ClaimItem extends Component
@@ -12,19 +16,19 @@ class ClaimItem extends Component
     public string $description = '';
 
     public function mount(Item $item)
-{
-    $item->loadMissing('category');
-    $this->item = $item;
+    {
+        $item->loadMissing('category');
+        $this->item = $item;
 
-    // Guard: pastikan barang ini benar bisa diklaim
-    abort_if($this->item->type !== 'temuan', 403, 'Barang ini bukan barang temuan.');
-    abort_if($this->item->user_id === auth()->id(), 403, 'Kamu tidak bisa mengklaim laporanmu sendiri.');
-    abort_if(in_array($this->item->status, ['claimed', 'resolved']), 403, 'Barang ini sudah diklaim.');
+        // Guard: pastikan barang ini benar bisa diklaim
+        abort_if($this->item->type !== 'temuan', 403, 'Barang ini bukan barang temuan.');
+        abort_if($this->item->user_id === auth()->id(), 403, 'Kamu tidak bisa mengklaim laporanmu sendiri.');
+        abort_if(in_array($this->item->status, ['claimed', 'resolved']), 403, 'Barang ini sudah diklaim.');
 
-    if (Claim::where('item_id', $this->item->id)->where('user_id', auth()->id())->exists()) {
-        abort(403, 'Kamu sudah pernah mengajukan klaim untuk barang ini.');
+        if (Claim::where('item_id', $this->item->id)->where('user_id', auth()->id())->exists()) {
+            abort(403, 'Kamu sudah pernah mengajukan klaim untuk barang ini.');
+        }
     }
-}
 
     protected function rules()
     {
@@ -42,12 +46,21 @@ class ClaimItem extends Component
     {
         $this->validate();
 
-        Claim::create([
+        $claim = Claim::create([
             'item_id' => $this->item->id,
             'user_id' => auth()->id(),
             'description' => $this->description,
             'status' => 'pending',
         ]);
+
+        // Beri tahu pelapor barang temuan bahwa ada yang mengklaim
+        $this->item->user?->notify(new NewClaimNotification($claim));
+
+        // Beri tahu semua admin bahwa ada klaim baru yang perlu diverifikasi
+        Notification::send(
+            User::admins()->where('id', '!=', auth()->id())->get(),
+            new AdminNewClaimNotification($claim)
+        );
 
         session()->flash('success', 'Klaim berhasil diajukan! Admin akan segera memverifikasi.');
 

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\ItemController as AdminItemController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AdminAuthenticatedSessionController;
@@ -29,6 +30,7 @@ Route::middleware('auth')->group(function () {
 
 Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/admin/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
+    Route::get('/admin/items/{item}', [AdminItemController::class, 'show'])->name('admin.items.show');
     Route::view('/admin/reports', 'admin.reports')->name('admin.reports');
     Route::view('/admin/claims', 'admin.claims')->name('admin.claims');
     Route::view('/admin/categories', 'admin.categories')->name('admin.categories');

@@ -3,6 +3,7 @@
 namespace App\Livewire\Admin;
 
 use App\Models\Claim;
+use App\Notifications\ClaimStatusNotification;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -40,7 +41,7 @@ class ManageClaims extends Component
 
     public function approve($claimId)
     {
-        $claim = Claim::with('item')->findOrFail($claimId);
+        $claim = Claim::with(['item', 'user'])->findOrFail($claimId);
 
         // Setujui klaim ini
         $claim->update(['status' => 'approved']);
@@ -50,10 +51,18 @@ class ManageClaims extends Component
 
         // Otomatis tolak klaim lain yang masih pending untuk barang yang sama
         // (karena barang cuma bisa dimiliki satu orang)
-        Claim::where('item_id', $claim->item_id)
+        $rejectedClaims = Claim::with('user')
+            ->where('item_id', $claim->item_id)
             ->where('id', '!=', $claim->id)
             ->where('status', 'pending')
-            ->update(['status' => 'rejected']);
+            ->get();
+
+        foreach ($rejectedClaims as $rejected) {
+            $rejected->update(['status' => 'rejected']);
+            $rejected->user?->notify(new ClaimStatusNotification($rejected, 'rejected'));
+        }
+
+        $claim->user?->notify(new ClaimStatusNotification($claim, 'approved'));
 
         $this->closeModal();
         session()->flash('success', 'Klaim disetujui & barang ditandai sebagai selesai diklaim.');
@@ -61,8 +70,10 @@ class ManageClaims extends Component
 
     public function reject($claimId)
     {
-        $claim = Claim::findOrFail($claimId);
+        $claim = Claim::with(['item', 'user'])->findOrFail($claimId);
         $claim->update(['status' => 'rejected']);
+
+        $claim->user?->notify(new ClaimStatusNotification($claim, 'rejected'));
 
         $this->closeModal();
         session()->flash('success', 'Klaim ditolak.');

@@ -80,15 +80,10 @@
         <!-- Header -->
         <header
             class="sticky top-0 z-30 bg-surface/80 backdrop-blur border-b border-outline-variant px-8 py-4 flex items-center justify-between">
-            <div class="flex items-center gap-2 w-96 bg-surface-container-low rounded-lg px-4 py-2">
-                <span class="material-symbols-outlined text-on-surface-variant text-lg">search</span>
-                <input type="text" placeholder="Cari laporan..." class="bg-transparent outline-none text-sm w-full">
-            </div>
 
-            <div class="flex items-center gap-4">
-                <button class="relative p-2 rounded-lg hover:bg-surface-container-low transition-colors">
-                    <span class="material-symbols-outlined">notifications</span>
-                </button>
+            <div class="flex items-center gap-4 ml-auto">
+                @livewire('admin.notification-bell')
+
                 <div class="flex items-center gap-2">
                     <div
                         class="w-9 h-9 rounded-full bg-secondary-container flex items-center justify-center text-on-secondary-container font-semibold text-sm">

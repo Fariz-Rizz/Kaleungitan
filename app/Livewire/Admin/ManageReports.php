@@ -4,6 +4,7 @@ namespace App\Livewire\Admin;
 
 use App\Models\Category;
 use App\Models\Item;
+use App\Notifications\ItemStatusNotification;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -49,6 +50,8 @@ class ManageReports extends Component
         $item = Item::findOrFail($itemId);
         $item->update(['status' => 'verified']);
 
+        $item->user?->notify(new ItemStatusNotification($item, 'verified'));
+
         $this->closeModal();
         session()->flash('success', 'Laporan berhasil disetujui.');
     }
@@ -65,6 +68,8 @@ class ManageReports extends Component
         $item = Item::findOrFail($itemId);
         $item->update(['status' => 'rejected']);
 
+        $item->user?->notify(new ItemStatusNotification($item, 'rejected', $this->rejectReason));
+
         $this->closeModal();
         session()->flash('success', 'Laporan berhasil ditolak.');
     }
@@ -73,6 +78,8 @@ class ManageReports extends Component
     {
         $item = Item::findOrFail($itemId);
         $item->update(['status' => 'resolved']);
+
+        $item->user?->notify(new ItemStatusNotification($item, 'resolved'));
 
         $this->closeModal();
         session()->flash('success', 'Laporan berhasil diarsipkan.');
