@@ -19,7 +19,10 @@
     {{-- Navbar --}}
     <header class="sticky top-0 z-40 bg-surface-container-lowest shadow-sm">
         <div class="max-w-7xl mx-auto px-4 md:px-8 h-16 flex items-center justify-between">
-            <a href="{{ route('dashboard') }}" class="text-2xl font-bold text-primary">Kaleungitan</a>
+            <a href="{{ route('dashboard') }}" class="flex items-center">
+                <img src="{{ asset('images/logo-kaleungitan.png') }}" alt="Logo Kaleungitan"
+                    class="h-10 w-auto object-contain">
+            </a>
 
             <nav class="hidden md:flex items-center gap-6 text-sm">
                 <a href="{{ route('browse.items') }}"
