@@ -20,11 +20,12 @@
     <aside class="fixed left-0 top-0 h-full w-[260px] z-40 bg-surface-container-lowest shadow-sm">
         <div class="flex flex-col h-full">
             <div class="p-6 flex flex-col gap-1">
-                <h1 class="text-2xl font-bold text-primary">Kaleungitan</h1>
-                <p class="text-sm text-on-surface-variant">Admin Console</p>
+                <img src="{{ asset('images/logo-kaleungitan.png') }}" alt="Logo Kaleungitan"
+                    class="h-10 w-auto object-contain">
+                <p class="text-sm text-on-surface-variant text-center">Admin Console</p>
             </div>
 
-            <nav class="flex-1 px-2 mt-4 space-y-1">
+            <nav class="flex-1 px-2 mt-0 space-y-1">
                 <a href="{{ route('admin.dashboard') }}"
                     class="flex items-center gap-3 px-4 py-3 rounded-lg transition-colors
                           {{ request()->routeIs('admin.dashboard') ? 'bg-secondary-container text-on-secondary-container border-l-4 border-primary' : 'text-on-surface-variant hover:bg-surface-container-low' }}">
@@ -79,9 +80,9 @@
 
         <!-- Header -->
         <header
-            class="sticky top-0 z-30 bg-surface/80 backdrop-blur border-b border-outline-variant px-8 py-4 flex items-center justify-between">
+            class="sticky top-0 z-30 bg-surface/80 backdrop-blur border-b border-outline-variant px-8 py-4 flex items-center justify-end">
 
-            <div class="flex items-center gap-4 ml-auto">
+            <div class="flex items-center gap-4">
                 @livewire('admin.notification-bell')
 
                 <div class="flex items-center gap-2">

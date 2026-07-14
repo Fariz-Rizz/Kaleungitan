@@ -10,8 +10,10 @@ use Illuminate\Http\Request;
 
 class DashboardController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
+        // Status yang dipilih dari dropdown Filter (opsional)
+        $status = $request->query('status');
         // Stat Cards
         $totalLost = Item::where('type', 'hilang')->count();
         $totalFound = Item::where('type', 'temuan')->count();
@@ -36,7 +38,7 @@ class DashboardController extends Controller
         });
 
         // Normalisasi tinggi bar chart jadi persen (biar tampilannya proporsional)
-        $maxCount = $months->flatMap(fn ($m) => [$m['lost'], $m['found']])->max();
+        $maxCount = $months->flatMap(fn($m) => [$m['lost'], $m['found']])->max();
         $maxCount = $maxCount > 0 ? $maxCount : 1;
 
         $months = $months->map(function ($m) use ($maxCount) {
@@ -56,8 +58,9 @@ class DashboardController extends Controller
 
         $totalItemsForDonut = Item::count();
 
-        // Aktivitas Terbaru
+        // Aktivitas Terbaru (bisa difilter berdasarkan status)
         $recentActivities = Item::with(['user', 'category'])
+            ->when($status, fn($query) => $query->where('status', $status))
             ->latest()
             ->take(5)
             ->get();
@@ -70,7 +73,8 @@ class DashboardController extends Controller
             'months',
             'topCategories',
             'totalItemsForDonut',
-            'recentActivities'
+            'recentActivities',
+            'status'
         ));
     }
 }
