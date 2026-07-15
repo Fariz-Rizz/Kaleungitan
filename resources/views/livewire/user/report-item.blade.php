@@ -2,10 +2,16 @@
 
     <div class="mb-6">
         <h1 class="text-2xl md:text-3xl font-bold text-on-surface">
-            {{ $type === 'hilang' ? 'Laporkan Barang Hilang' : 'Laporkan Barang Temuan' }}
+            @if ($item)
+                Edit Laporan
+            @else
+                {{ $type === 'hilang' ? 'Laporkan Barang Hilang' : 'Laporkan Barang Temuan' }}
+            @endif
         </h1>
         <p class="text-sm text-on-surface-variant mt-1">
-            @if ($type === 'hilang')
+            @if ($item)
+                Perbarui detail laporan kamu di bawah ini.
+            @elseif ($type === 'hilang')
                 Isi detail barang yang kamu hilangkan selengkap mungkin agar mudah ditemukan.
             @else
                 Isi detail barang yang kamu temukan agar pemiliknya bisa segera dihubungi.
@@ -89,6 +95,14 @@
                             <span class="material-symbols-outlined text-lg">close</span>
                         </button>
                     </div>
+                @elseif ($existingPhoto)
+                    <div class="relative w-full h-48 rounded-lg overflow-hidden mb-3 bg-surface-container">
+                        <img src="{{ asset('storage/' . $existingPhoto) }}" class="w-full h-full object-cover">
+                        <button type="button" wire:click="removePhoto"
+                            class="absolute top-2 right-2 bg-black/60 text-white rounded-full w-8 h-8 flex items-center justify-center hover:bg-black/80">
+                            <span class="material-symbols-outlined text-lg">close</span>
+                        </button>
+                    </div>
                 @else
                     <label
                         class="flex flex-col items-center justify-center gap-2 border-2 border-dashed border-outline-variant rounded-lg py-8 cursor-pointer hover:bg-surface-container-low transition-colors">
@@ -106,8 +120,8 @@
 
             <button wire:click="save" wire:loading.attr="disabled" wire:target="save,photo"
                 class="w-full py-3.5 bg-primary text-on-primary rounded-lg font-semibold shadow-sm hover:opacity-90 transition-opacity disabled:opacity-50">
-                <span wire:loading.remove wire:target="save">Kirim Laporan</span>
-                <span wire:loading wire:target="save">Mengirim...</span>
+                <span wire:loading.remove wire:target="save">{{ $item ? 'Simpan Perubahan' : 'Kirim Laporan' }}</span>
+                <span wire:loading wire:target="save">{{ $item ? 'Menyimpan...' : 'Mengirim...' }}</span>
             </button>
 
         </div>

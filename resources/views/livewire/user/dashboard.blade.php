@@ -1,5 +1,15 @@
 <div>
 
+    @if ($successMessage)
+        <div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 3000)"
+            class="mb-4 bg-green-50 border border-green-200 text-green-700 text-sm px-4 py-3 rounded-lg flex items-center justify-between">
+            <span>{{ $successMessage }}</span>
+            <button @click="show = false" class="text-green-700">
+                <span class="material-symbols-outlined text-lg">close</span>
+            </button>
+        </div>
+    @endif
+
     {{-- Welcome Header --}}
     <div class="mb-6">
         <h1 class="text-2xl md:text-3xl font-bold text-on-surface">Halo, {{ auth()->user()->name }} 👋</h1>
@@ -93,10 +103,26 @@
                                 <span class="material-symbols-outlined text-sm">schedule</span>
                                 {{ $item->date->translatedFormat('d M Y') }}
                             </div>
-                            <a href="{{ route('items.show', $item->id) }}"
-                                class="mt-auto block text-center bg-surface-container-low text-on-surface-variant py-2 rounded-lg text-xs font-semibold hover:bg-surface-container">
-                                Lihat Detail
-                            </a>
+                            <div class="mt-auto flex items-center gap-2">
+                                <a href="{{ route('items.show', $item->id) }}"
+                                    class="flex-1 text-center bg-surface-container-low text-on-surface-variant py-2 rounded-lg text-xs font-semibold hover:bg-surface-container">
+                                    Lihat Detail
+                                </a>
+                                @if ($item->status === 'pending')
+                                    <a href="{{ route('report.edit', $item->id) }}"
+                                        title="Edit Laporan"
+                                        class="flex items-center justify-center w-9 h-9 flex-shrink-0 bg-surface-container-low text-on-surface-variant rounded-lg hover:bg-surface-container">
+                                        <span class="material-symbols-outlined text-lg">edit</span>
+                                    </a>
+                                    <button type="button"
+                                        wire:click="deleteReport({{ $item->id }})"
+                                        wire:confirm="Yakin ingin menghapus laporan ini?"
+                                        title="Hapus Laporan"
+                                        class="flex items-center justify-center w-9 h-9 flex-shrink-0 bg-error-container/20 text-error rounded-lg hover:bg-error-container/40">
+                                        <span class="material-symbols-outlined text-lg">delete</span>
+                                    </button>
+                                @endif
+                            </div>
                         </div>
                     </div>
                 @endforeach

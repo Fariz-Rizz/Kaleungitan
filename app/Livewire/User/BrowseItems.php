@@ -30,7 +30,7 @@ class BrowseItems extends Component
         $items = Item::query()
             ->with(['category', 'user'])
             // Sembunyikan laporan yang ditolak admin dari daftar publik
-            ->where('status', '!=', 'rejected')
+            ->whereIn('status', ['verified', 'claimed', 'resolved'])
             ->when($this->search, function ($q) {
                 $q->where(function ($sub) {
                     $sub->where('name', 'like', "%{$this->search}%")

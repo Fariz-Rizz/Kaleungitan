@@ -29,7 +29,10 @@
         class="fixed left-0 top-0 h-full w-64 z-50 bg-surface-container-lowest shadow-sm transform transition-transform duration-300 ease-in-out md:translate-x-0">
         <div class="flex flex-col h-full">
             <div class="p-6 flex items-center justify-between">
-                <a href="{{ route('dashboard') }}" class="text-2xl font-bold text-primary">Kaleungitan</a>
+                <a href="{{ route('dashboard') }}" class="flex items-center gap-2">
+                    <img src="{{ asset('images/logo-kaleungitan.png') }}" alt="Logo Kaleungitan" class="h-8 w-auto">
+                    {{-- <span class="text-xl font-bold text-primary">Kaleungitan</span> --}}
+                </a>
                 <button @click="sidebarOpen = false" class="md:hidden text-on-surface-variant">
                     <span class="material-symbols-outlined">close</span>
                 </button>
@@ -90,8 +93,8 @@
                         <span class="material-symbols-outlined text-lg text-on-surface-variant">unfold_more</span>
                     </button>
 
-                    <div x-show="open" @click.outside="open = false" x-cloak
-                        class="absolute right-0 mt-2 w-48 bg-surface-container-lowest rounded-lg shadow-lg border border-outline-variant py-2 text-sm">
+                   <div x-show="open" @click.outside="open = false" x-cloak
+                        class="absolute bottom-full left-0 mb-2 w-full bg-surface-container-lowest rounded-lg shadow-lg border border-outline-variant py-2 text-sm z-50">
                         <div class="px-4 py-2 border-b border-outline-variant">
                             <p class="font-medium">{{ auth()->user()->name }}</p>
                             <p class="text-xs text-on-surface-variant">{{ auth()->user()->email }}</p>
@@ -122,7 +125,9 @@
                     <button @click="sidebarOpen = true" class="md:hidden text-on-surface-variant">
                         <span class="material-symbols-outlined">menu</span>
                     </button>
-                    <a href="{{ route('dashboard') }}" class="md:hidden text-lg font-bold text-primary">Kaleungitan</a>
+                    <a href="{{ route('dashboard') }}" class="md:hidden flex items-center gap-2">
+                        <img src="{{ asset('images/logo-kaleungitan.png') }}" alt="Logo Kaleungitan" class="h-7 w-auto">
+                    </a>
                 </div>
 
                 <div class="flex items-center gap-3 ml-auto">

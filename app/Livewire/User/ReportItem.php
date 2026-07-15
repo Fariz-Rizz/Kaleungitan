@@ -7,12 +7,15 @@ use App\Models\Item;
 use App\Models\User;
 use App\Notifications\NewItemReportNotification;
 use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Facades\Storage;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
 class ReportItem extends Component
 {
     use WithFileUploads;
+
+    public ?Item $item = null; // terisi kalau mode edit
 
     public string $type; // 'hilang' atau 'temuan'
 
@@ -22,11 +25,23 @@ class ReportItem extends Component
     public string $location = '';
     public string $date = '';
     public $photo = null;
+    public ?string $existingPhoto = null; // foto lama saat mode edit
 
-    public function mount(string $type)
+    public function mount(?string $type = null, ?Item $item = null)
     {
-        $this->type = $type;
-        $this->date = now()->format('Y-m-d');
+        if ($item) {
+            $this->item = $item;
+            $this->type = $item->type;
+            $this->name = $item->name;
+            $this->category_id = (string) $item->category_id;
+            $this->description = $item->description;
+            $this->location = $item->location;
+            $this->date = $item->date->format('Y-m-d');
+            $this->existingPhoto = $item->photo;
+        } else {
+            $this->type = $type;
+            $this->date = now()->format('Y-m-d');
+        }
     }
 
     protected function rules()
@@ -56,12 +71,43 @@ class ReportItem extends Component
     public function removePhoto()
     {
         $this->photo = null;
+        $this->existingPhoto = null;
     }
 
     public function save()
     {
         $this->validate();
 
+        // Mode EDIT
+        if ($this->item) {
+            $photoPath = $this->existingPhoto;
+
+            if ($this->photo) {
+                if ($this->item->photo) {
+                    Storage::disk('public')->delete($this->item->photo);
+                }
+                $photoPath = $this->photo->store('items', 'public');
+            } elseif (! $this->existingPhoto && $this->item->photo) {
+                // foto lama sengaja dihapus user dan tidak diganti
+                Storage::disk('public')->delete($this->item->photo);
+                $photoPath = null;
+            }
+
+            $this->item->update([
+                'category_id' => $this->category_id,
+                'name' => $this->name,
+                'description' => $this->description,
+                'location' => $this->location,
+                'date' => $this->date,
+                'photo' => $photoPath,
+            ]);
+
+            session()->flash('success', 'Laporan berhasil diperbarui.');
+
+            return redirect()->route('items.show', $this->item->id);
+        }
+
+        // Mode CREATE
         $photoPath = null;
         if ($this->photo) {
             $photoPath = $this->photo->store('items', 'public');

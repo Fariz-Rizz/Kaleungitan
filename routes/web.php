@@ -26,6 +26,12 @@ Route::middleware('auth')->group(function () {
 
     Route::view('/report/lost', 'user.report-lost')->name('report.lost');
     Route::view('/report/found', 'user.report-found')->name('report.found');
+
+    Route::get('/report/{item}/edit', function (\App\Models\Item $item) {
+    abort_unless($item->user_id === auth()->id(), 403);
+    abort_unless($item->status === 'pending', 403, 'Laporan yang sudah diproses admin tidak bisa diedit.');
+    return view('user.report-edit', ['item' => $item]);
+    })->name('report.edit');
 });
 
 Route::middleware(['auth', 'admin'])->group(function () {

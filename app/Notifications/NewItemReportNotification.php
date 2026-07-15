@@ -25,7 +25,7 @@ class NewItemReportNotification extends Notification
         return [
             'message' => "{$reporterName} membuat laporan {$typeLabel} baru untuk barang \"{$this->item->name}\". Perlu verifikasi.",
             'item_id' => $this->item->id,
-            'url' => route('items.show', $this->item->id),
+            'url' => route('admin.items.show', $this->item->id),
         ];
     }
 }

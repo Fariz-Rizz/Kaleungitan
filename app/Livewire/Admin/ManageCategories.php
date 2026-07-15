@@ -61,18 +61,26 @@ class ManageCategories extends Component
         $this->resetErrorBag();
     }
 
-    public function save()
-    {
-        $this->validate();
+public function save()
+{
+    $this->validate();
 
-        Category::updateOrCreate(
-            ['id' => $this->editingId],
-            ['name' => $this->name]
-        );
+    $isEdit = !is_null($this->editingId);
 
-        $this->closeModal();
-        session()->flash('success', $this->editingId ? 'Kategori berhasil diperbarui.' : 'Kategori berhasil ditambahkan.');
-    }
+    Category::updateOrCreate(
+        ['id' => $this->editingId],
+        ['name' => $this->name]
+    );
+
+    $this->closeModal();
+
+    session()->flash(
+        'success',
+        $isEdit
+            ? 'Kategori berhasil diperbarui.'
+            : 'Kategori berhasil ditambahkan.'
+    );
+}
 
     public function confirmDelete($id)
     {
