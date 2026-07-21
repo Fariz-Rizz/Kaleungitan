@@ -43,31 +43,8 @@
                     class="flex items-center gap-3 px-4 py-3 rounded-lg transition-colors
                         {{ request()->routeIs('browse.items') ? 'bg-secondary-container text-on-secondary-container border-l-4 border-primary' : 'text-on-surface-variant hover:bg-surface-container-low' }}">
                     <span class="material-symbols-outlined">search</span>
-                    <span>Browse</span>
+                    <span>Cari Barang</span>
                 </a>
-
-                <div x-data="{ openReport: {{ request()->routeIs('report.*') ? 'true' : 'false' }} }">
-                    <button @click="openReport = !openReport"
-                        class="w-full flex items-center justify-between px-4 py-3 rounded-lg transition-colors
-                            {{ request()->routeIs('report.*') ? 'bg-secondary-container text-on-secondary-container' : 'text-on-surface-variant hover:bg-surface-container-low' }}">
-                        <span class="flex items-center gap-3">
-                            <span class="material-symbols-outlined">campaign</span>
-                            <span>Report</span>
-                        </span>
-                        <span class="material-symbols-outlined text-lg transition-transform"
-                            :class="openReport ? 'rotate-180' : ''">expand_more</span>
-                    </button>
-                    <div x-show="openReport" x-collapse class="pl-11 pr-2 py-1 space-y-1">
-                        <a href="{{ route('report.lost') }}"
-                            class="block px-3 py-2 rounded-lg text-sm {{ request()->routeIs('report.lost') ? 'text-primary font-semibold' : 'text-on-surface-variant hover:bg-surface-container-low' }}">
-                            Lapor Barang Hilang
-                        </a>
-                        <a href="{{ route('report.found') }}"
-                            class="block px-3 py-2 rounded-lg text-sm {{ request()->routeIs('report.found') ? 'text-primary font-semibold' : 'text-on-surface-variant hover:bg-surface-container-low' }}">
-                            Lapor Barang Temuan
-                        </a>
-                    </div>
-                </div>
 
                 <a href="{{ route('dashboard') }}"
                     class="flex items-center gap-3 px-4 py-3 rounded-lg transition-colors
@@ -75,6 +52,25 @@
                     <span class="material-symbols-outlined">dashboard</span>
                     <span>Dashboard</span>
                 </a>
+
+                {{-- Buat Laporan: dulu tersembunyi di dropdown 2 klik, sekarang langsung terlihat --}}
+                <div class="pt-3 mt-3 border-t border-outline-variant">
+                    <p class="px-4 pb-2 text-xs font-semibold text-on-surface-variant uppercase tracking-wider">
+                        Buat Laporan
+                    </p>
+                    <a href="{{ route('report.lost') }}"
+                        class="flex items-center gap-3 px-4 py-3 rounded-lg transition-colors
+                            {{ request()->routeIs('report.lost') ? 'bg-secondary-container text-on-secondary-container border-l-4 border-primary' : 'text-on-surface-variant hover:bg-surface-container-low' }}">
+                        <span class="material-symbols-outlined">search</span>
+                        <span>Barang Hilang</span>
+                    </a>
+                    <a href="{{ route('report.found') }}"
+                        class="flex items-center gap-3 px-4 py-3 rounded-lg transition-colors
+                            {{ request()->routeIs('report.found') ? 'bg-secondary-container text-on-secondary-container border-l-4 border-primary' : 'text-on-surface-variant hover:bg-surface-container-low' }}">
+                        <span class="material-symbols-outlined">inventory_2</span>
+                        <span>Barang Temuan</span>
+                    </a>
+                </div>
             </nav>
 
             {{-- Profil & Logout --}}
@@ -99,14 +95,13 @@
                             <p class="font-medium">{{ auth()->user()->name }}</p>
                             <p class="text-xs text-on-surface-variant">{{ auth()->user()->email }}</p>
                         </div>
-                        <a href="{{ route('profile.edit') }}" class="block px-4 py-2 hover:bg-surface-container-low">My
-                            Profile</a>
+                        <a href="{{ route('profile.edit') }}" class="block px-4 py-2 hover:bg-surface-container-low">Profil Saya</a>
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
                             <button type="submit"
                                 class="w-full flex items-center gap-2 text-left px-4 py-2 text-error hover:bg-error-container/30">
                                 <span class="material-symbols-outlined text-lg">logout</span>
-                                Logout
+                                Keluar
                             </button>
                         </form>
                     </div>
