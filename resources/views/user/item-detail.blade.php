@@ -71,27 +71,30 @@
 
                 {{-- Action Button --}}
                 @if ($item->user_id === auth()->id())
-                    <div class="bg-surface-container-low text-on-surface-variant text-sm text-center py-3 rounded-lg">
-                        Ini laporan kamu sendiri.
-                    </div>
-                @elseif ($item->type !== 'temuan')
-                    <div class="bg-surface-container-low text-on-surface-variant text-sm text-center py-3 rounded-lg">
-                        Barang ini dilaporkan hilang, bukan temuan — tidak bisa diklaim.
-                    </div>
+                    @if ($item->type === 'hilang' && !in_array($item->status, ['claimed', 'resolved']))
+                        {{-- Pemilik laporan hilang: tampilkan laporan penemuan yang perlu diverifikasi --}}
+                        @livewire('user.resolve-found-reports', ['item' => $item])
+                    @else
+                        <div class="bg-surface-container-low text-on-surface-variant text-sm text-center py-3 rounded-lg">
+                            Ini laporan kamu sendiri.
+                        </div>
+                    @endif
                 @elseif (in_array($item->status, ['claimed', 'resolved']))
                     <div class="bg-surface-container-low text-on-surface-variant text-sm text-center py-3 rounded-lg">
-                        Barang ini sudah diklaim orang lain.
+                        Laporan ini sudah selesai.
                     </div>
                 @elseif ($existingClaim)
                     <div class="bg-amber-50 text-amber-700 text-sm text-center py-3 rounded-lg">
-                        Kamu sudah mengajukan klaim untuk barang ini — status:
+                        Kamu sudah mengirim laporan untuk barang ini — status:
                         <strong>{{ $existingClaim->status }}</strong>
                     </div>
                 @else
                     <a href="{{ route('items.claim', $item->id) }}"
                         class="w-full py-3 bg-primary text-on-primary rounded-lg font-semibold shadow-sm hover:opacity-90 transition-opacity flex items-center justify-center gap-2">
-                        <span class="material-symbols-outlined">verified_user</span>
-                        Ajukan Klaim Barang Ini
+                        <span class="material-symbols-outlined">
+                            {{ $item->type === 'temuan' ? 'verified_user' : 'campaign' }}
+                        </span>
+                        {{ $item->type === 'temuan' ? 'Ajukan Klaim Barang Ini' : 'Laporkan Sudah Ditemukan' }}
                     </a>
                 @endif
             </div>

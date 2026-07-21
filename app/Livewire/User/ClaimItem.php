@@ -6,6 +6,7 @@ use App\Models\Item;
 use App\Models\Claim;
 use App\Models\User;
 use App\Notifications\AdminNewClaimNotification;
+use App\Notifications\FoundReportNotification;
 use App\Notifications\NewClaimNotification;
 use Illuminate\Support\Facades\Notification;
 use Livewire\Component;
@@ -20,13 +21,12 @@ class ClaimItem extends Component
         $item->loadMissing('category');
         $this->item = $item;
 
-        // Guard: pastikan barang ini benar bisa diklaim
-        abort_if($this->item->type !== 'temuan', 403, 'Barang ini bukan barang temuan.');
-        abort_if($this->item->user_id === auth()->id(), 403, 'Kamu tidak bisa mengklaim laporanmu sendiri.');
-        abort_if(in_array($this->item->status, ['claimed', 'resolved']), 403, 'Barang ini sudah diklaim.');
+        // Guard umum untuk kedua arah (klaim barang temuan & laporan penemuan barang hilang)
+        abort_if($this->item->user_id === auth()->id(), 403, 'Kamu tidak bisa melapor pada laporanmu sendiri.');
+        abort_if(in_array($this->item->status, ['claimed', 'resolved']), 403, 'Laporan ini sudah diselesaikan.');
 
         if (Claim::where('item_id', $this->item->id)->where('user_id', auth()->id())->exists()) {
-            abort(403, 'Kamu sudah pernah mengajukan klaim untuk barang ini.');
+            abort(403, 'Kamu sudah pernah mengirim laporan untuk barang ini.');
         }
     }
 
@@ -38,8 +38,8 @@ class ClaimItem extends Component
     }
 
     protected $messages = [
-        'description.required' => 'Deskripsi bukti kepemilikan wajib diisi.',
-        'description.min' => 'Jelaskan lebih detail (minimal 15 karakter) agar admin bisa memverifikasi.',
+        'description.required' => 'Deskripsi wajib diisi.',
+        'description.min' => 'Jelaskan lebih detail (minimal 15 karakter) agar bisa diverifikasi.',
     ];
 
     public function submit()
@@ -53,16 +53,22 @@ class ClaimItem extends Component
             'status' => 'pending',
         ]);
 
-        // Beri tahu pelapor barang temuan bahwa ada yang mengklaim
-        $this->item->user?->notify(new NewClaimNotification($claim));
+        if ($this->item->type === 'temuan') {
+            // Klaim kepemilikan atas barang temuan -> diverifikasi ADMIN
+            $this->item->user?->notify(new NewClaimNotification($claim));
 
-        // Beri tahu semua admin bahwa ada klaim baru yang perlu diverifikasi
-        Notification::send(
-            User::admins()->where('id', '!=', auth()->id())->get(),
-            new AdminNewClaimNotification($claim)
-        );
+            Notification::send(
+                User::admins()->where('id', '!=', auth()->id())->get(),
+                new AdminNewClaimNotification($claim)
+            );
 
-        session()->flash('success', 'Klaim berhasil diajukan! Admin akan segera memverifikasi.');
+            session()->flash('success', 'Klaim berhasil diajukan! Admin akan segera memverifikasi.');
+        } else {
+            // Laporan penemuan atas barang hilang -> diverifikasi langsung oleh PEMILIK LAPORAN
+            $this->item->user?->notify(new FoundReportNotification($claim));
+
+            session()->flash('success', 'Laporan penemuan berhasil dikirim! Pemilik laporan akan diberi tahu untuk verifikasi.');
+        }
 
         return redirect()->route('dashboard');
     }
