@@ -16,41 +16,53 @@
         <p class="text-sm text-on-surface-variant mt-1">Kelola laporan dan klaim barang kamu di sini.</p>
     </div>
 
-    {{-- Stat Cards --}}
+    {{-- Stat Cards: 4 kartu, desain minimalist (1 gaya warna konsisten, dibedakan lewat aksen kecil) --}}
     <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-        <div class="bg-surface-container-lowest p-5 rounded-xl shadow-sm border border-outline-variant">
-            <p class="text-xs font-semibold text-on-surface-variant uppercase tracking-wider">Total Laporan</p>
-            <p class="text-3xl font-bold text-primary mt-1">{{ $totalReports }}</p>
+        <div class="bg-surface-container-lowest p-5 rounded-xl border border-outline-variant">
+            <div class="flex items-center gap-2 mb-2">
+                <span class="material-symbols-outlined text-base text-on-surface-variant">inventory_2</span>
+                <p class="text-xs font-medium text-on-surface-variant">Total Laporan</p>
+            </div>
+            <p class="text-2xl font-bold text-on-surface">{{ $totalReports }}</p>
         </div>
-        <div class="bg-amber-50 p-5 rounded-xl shadow-sm border border-amber-100">
-            <p class="text-xs font-semibold text-amber-700 uppercase tracking-wider">Menunggu Verifikasi</p>
-            <p class="text-3xl font-bold text-amber-700 mt-1">{{ $pendingReports }}</p>
+        <div class="bg-surface-container-lowest p-5 rounded-xl border border-outline-variant">
+            <div class="flex items-center gap-2 mb-2">
+                <span class="material-symbols-outlined text-base text-amber-600">hourglass_top</span>
+                <p class="text-xs font-medium text-on-surface-variant">Menunggu Verifikasi</p>
+            </div>
+            <p class="text-2xl font-bold text-on-surface">{{ $pendingReports }}</p>
         </div>
-        <div class="bg-primary/5 p-5 rounded-xl shadow-sm border border-primary/20">
-            <p class="text-xs font-semibold text-primary uppercase tracking-wider">Klaim Pending</p>
-            <p class="text-3xl font-bold text-primary mt-1">{{ $pendingClaims }}</p>
+        <div class="bg-surface-container-lowest p-5 rounded-xl border border-outline-variant">
+            <div class="flex items-center gap-2 mb-2">
+                <span class="material-symbols-outlined text-base text-primary">pending_actions</span>
+                <p class="text-xs font-medium text-on-surface-variant">Klaim Pending</p>
+            </div>
+            <p class="text-2xl font-bold text-on-surface">{{ $pendingClaims }}</p>
         </div>
-        <div class="bg-green-50 p-5 rounded-xl shadow-sm border border-green-100">
-            <p class="text-xs font-semibold text-green-700 uppercase tracking-wider">Selesai</p>
-            <p class="text-3xl font-bold text-green-700 mt-1">{{ $resolvedReports }}</p>
+        <div class="bg-surface-container-lowest p-5 rounded-xl border border-outline-variant">
+            <div class="flex items-center gap-2 mb-2">
+                <span class="material-symbols-outlined text-base text-green-600">check_circle</span>
+                <p class="text-xs font-medium text-on-surface-variant">Selesai</p>
+            </div>
+            <p class="text-2xl font-bold text-on-surface">{{ $resolvedReports }}</p>
         </div>
     </div>
 
-    {{-- Tabs --}}
+    {{-- Tabs: bahasa disamakan jadi Indonesia semua --}}
     <div class="flex items-center gap-6 border-b border-outline-variant mb-6">
         <button wire:click="setTab('reports')"
             class="pb-3 text-sm font-semibold border-b-2 transition-colors
                     {{ $activeTab === 'reports' ? 'border-primary text-primary' : 'border-transparent text-on-surface-variant hover:text-on-surface' }}">
-            My Reports
+            Laporan Saya
         </button>
         <button wire:click="setTab('claims')"
             class="pb-3 text-sm font-semibold border-b-2 transition-colors
                     {{ $activeTab === 'claims' ? 'border-primary text-primary' : 'border-transparent text-on-surface-variant hover:text-on-surface' }}">
-            My Claims
+            Klaim Saya
         </button>
     </div>
 
-    {{-- Tab: My Reports --}}
+    {{-- Tab: Laporan Saya --}}
     @if ($activeTab === 'reports')
         @if ($myReports->isEmpty())
             <div
@@ -65,12 +77,13 @@
             </div>
         @else
             @php
+                // Label status disamakan ke Bahasa Indonesia semua
                 $statusBadge = [
-                    'pending' => ['bg-amber-100 text-amber-700', 'Pending'],
-                    'verified' => ['bg-blue-100 text-blue-700', 'Verified'],
-                    'claimed' => ['bg-green-100 text-green-700', 'Claimed'],
-                    'resolved' => ['bg-green-100 text-green-700', 'Resolved'],
-                    'rejected' => ['bg-red-100 text-red-700', 'Rejected'],
+                    'pending' => ['bg-amber-100 text-amber-700', 'Menunggu'],
+                    'verified' => ['bg-blue-100 text-blue-700', 'Terverifikasi'],
+                    'claimed' => ['bg-green-100 text-green-700', 'Diklaim'],
+                    'resolved' => ['bg-green-100 text-green-700', 'Selesai'],
+                    'rejected' => ['bg-red-100 text-red-700', 'Ditolak'],
                 ];
                 $typeIcon = ['hilang' => 'search', 'temuan' => 'inventory_2'];
             @endphp
@@ -103,24 +116,38 @@
                                 <span class="material-symbols-outlined text-sm">schedule</span>
                                 {{ $item->date->translatedFormat('d M Y') }}
                             </div>
+
+                            {{-- Aksi disederhanakan: hanya 1 tombol utama, edit/hapus disembunyikan di menu titik tiga --}}
                             <div class="mt-auto flex items-center gap-2">
                                 <a href="{{ route('items.show', $item->id) }}"
                                     class="flex-1 text-center bg-surface-container-low text-on-surface-variant py-2 rounded-lg text-xs font-semibold hover:bg-surface-container">
                                     Lihat Detail
                                 </a>
+
                                 @if ($item->status === 'pending')
-                                    <a href="{{ route('report.edit', $item->id) }}"
-                                        title="Edit Laporan"
-                                        class="flex items-center justify-center w-9 h-9 flex-shrink-0 bg-surface-container-low text-on-surface-variant rounded-lg hover:bg-surface-container">
-                                        <span class="material-symbols-outlined text-lg">edit</span>
-                                    </a>
-                                    <button type="button"
-                                        wire:click="deleteReport({{ $item->id }})"
-                                        wire:confirm="Yakin ingin menghapus laporan ini?"
-                                        title="Hapus Laporan"
-                                        class="flex items-center justify-center w-9 h-9 flex-shrink-0 bg-error-container/20 text-error rounded-lg hover:bg-error-container/40">
-                                        <span class="material-symbols-outlined text-lg">delete</span>
-                                    </button>
+                                    <div x-data="{ menuOpen: false }" class="relative flex-shrink-0">
+                                        <button type="button" @click="menuOpen = !menuOpen"
+                                            title="Menu Lainnya"
+                                            class="flex items-center justify-center w-9 h-9 bg-surface-container-low text-on-surface-variant rounded-lg hover:bg-surface-container">
+                                            <span class="material-symbols-outlined text-lg">more_vert</span>
+                                        </button>
+
+                                        <div x-show="menuOpen" @click.outside="menuOpen = false" x-cloak
+                                            class="absolute right-0 bottom-11 w-40 bg-surface-container-lowest border border-outline-variant rounded-lg shadow-lg overflow-hidden z-10">
+                                            <a href="{{ route('report.edit', $item->id) }}"
+                                                class="flex items-center gap-2 px-4 py-2.5 text-xs font-medium hover:bg-surface-container-low">
+                                                <span class="material-symbols-outlined text-base">edit</span>
+                                                Edit Laporan
+                                            </a>
+                                            <button type="button"
+                                                wire:click="deleteReport({{ $item->id }})"
+                                                wire:confirm="Yakin ingin menghapus laporan ini?"
+                                                class="w-full flex items-center gap-2 px-4 py-2.5 text-xs font-medium text-error hover:bg-error-container/20">
+                                                <span class="material-symbols-outlined text-base">delete</span>
+                                                Hapus Laporan
+                                            </button>
+                                        </div>
+                                    </div>
                                 @endif
                             </div>
                         </div>
@@ -130,7 +157,7 @@
         @endif
     @endif
 
-    {{-- Tab: My Claims --}}
+    {{-- Tab: Klaim Saya --}}
     @if ($activeTab === 'claims')
         @if ($myClaims->isEmpty())
             <div
@@ -147,9 +174,9 @@
         @else
             @php
                 $claimBadge = [
-                    'pending' => 'bg-amber-100 text-amber-700',
-                    'approved' => 'bg-green-100 text-green-700',
-                    'rejected' => 'bg-red-100 text-red-700',
+                    'pending' => ['bg-amber-100 text-amber-700', 'Menunggu'],
+                    'approved' => ['bg-green-100 text-green-700', 'Disetujui'],
+                    'rejected' => ['bg-red-100 text-red-700', 'Ditolak'],
                 ];
             @endphp
 
@@ -160,8 +187,8 @@
                         <div class="flex items-start justify-between mb-2">
                             <h3 class="font-semibold text-sm">{{ $claim->item->name ?? '-' }}</h3>
                             <span
-                                class="px-3 py-1 rounded-full text-[11px] font-bold uppercase {{ $claimBadge[$claim->status] ?? '' }}">
-                                {{ $claim->status }}
+                                class="px-3 py-1 rounded-full text-[11px] font-bold uppercase {{ $claimBadge[$claim->status][0] ?? '' }}">
+                                {{ $claimBadge[$claim->status][1] ?? $claim->status }}
                             </span>
                         </div>
                         <p class="text-xs text-on-surface-variant mb-3">{{ $claim->item->category->name ?? '-' }}</p>
