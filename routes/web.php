@@ -8,7 +8,7 @@ use App\Http\Controllers\Auth\AdminAuthenticatedSessionController;
 use App\Http\Controllers\ItemController;
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('landing');
 });
 
 Route::view('/dashboard', 'user.dashboard')->middleware(['auth'])->name('dashboard');
