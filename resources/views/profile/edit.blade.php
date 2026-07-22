@@ -1,13 +1,13 @@
 @extends('layouts.user')
 
-@section('title', 'My Profile')
+@section('title', 'Profil Saya')
 
 @section('content')
 
     {{-- Header --}}
     <div class="mb-6">
-        <h1 class="text-2xl md:text-3xl font-bold text-on-surface">My Profile</h1>
-        <p class="text-sm text-on-surface-variant mt-1">Informasi akun kamu, diambil dari data saat registrasi.</p>
+        <h1 class="text-2xl md:text-3xl font-bold text-on-surface">Profil Saya</h1>
+        <p class="text-sm text-on-surface-variant mt-1">Kelola informasi akun dan keamanan kamu di sini.</p>
     </div>
 
     {{-- Profile Summary Card --}}
@@ -21,6 +21,9 @@
             <div class="flex-1">
                 <p class="text-lg font-semibold text-on-surface">{{ $user->name }}</p>
                 <p class="text-sm text-on-surface-variant">{{ $user->email }}</p>
+                <p class="text-xs text-on-surface-variant mt-1">
+                    Bergabung sejak {{ $user->created_at->translatedFormat('d F Y') }}
+                </p>
             </div>
 
             <div class="flex flex-wrap gap-2">
@@ -39,43 +42,22 @@
                 @endif
             </div>
         </div>
-
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-6 pt-5 border-t border-outline-variant">
-            <div>
-                <p class="text-xs font-semibold text-on-surface-variant uppercase tracking-wider">Nama Lengkap</p>
-                <p class="text-sm text-on-surface mt-1">{{ $user->name }}</p>
-            </div>
-            <div>
-                <p class="text-xs font-semibold text-on-surface-variant uppercase tracking-wider">Email</p>
-                <p class="text-sm text-on-surface mt-1">{{ $user->email }}</p>
-            </div>
-            <div>
-                <p class="text-xs font-semibold text-on-surface-variant uppercase tracking-wider">Bergabung Sejak</p>
-                <p class="text-sm text-on-surface mt-1">{{ $user->created_at->translatedFormat('d F Y') }}</p>
-            </div>
-        </div>
     </div>
 
     <div class="space-y-6">
         {{-- Update Profile Information --}}
         <div class="bg-surface-container-lowest p-5 md:p-6 rounded-xl shadow-sm border border-outline-variant">
-            <div class="max-w-xl">
-                @include('profile.partials.update-profile-information-form')
-            </div>
+            @include('profile.partials.update-profile-information-form')
         </div>
 
         {{-- Update Password --}}
         <div class="bg-surface-container-lowest p-5 md:p-6 rounded-xl shadow-sm border border-outline-variant">
-            <div class="max-w-xl">
-                @include('profile.partials.update-password-form')
-            </div>
+            @include('profile.partials.update-password-form')
         </div>
 
-        {{-- Delete Account --}}
-        <div class="bg-surface-container-lowest p-5 md:p-6 rounded-xl shadow-sm border border-outline-variant">
-            <div class="max-w-xl">
-                @include('profile.partials.delete-user-form')
-            </div>
+        {{-- Delete Account (Danger Zone) --}}
+        <div class="bg-error-container/10 p-5 md:p-6 rounded-xl shadow-sm border border-error/20">
+            @include('profile.partials.delete-user-form')
         </div>
     </div>
 
