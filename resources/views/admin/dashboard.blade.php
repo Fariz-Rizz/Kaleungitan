@@ -77,8 +77,16 @@
             <div class="h-64 flex items-end justify-between gap-4 px-2 border-b border-outline-variant pb-2">
                 @foreach ($months as $m)
                     <div class="flex-1 flex flex-col items-center gap-1 h-full justify-end">
-                        <div class="w-4 bg-primary rounded-t-sm" style="height: {{ $m['lost_percent'] }}%"></div>
-                        <div class="w-4 bg-secondary/50 rounded-t-sm" style="height: {{ $m['found_percent'] }}%"></div>
+                        {{-- Bar Hilang + angka di atasnya --}}
+                        <div class="w-4 flex flex-col items-center justify-end" style="height: {{ $m['lost_percent'] }}%">
+                            <span class="text-[10px] font-semibold text-primary mb-1">{{ $m['lost'] ?? 0 }}</span>
+                            <div class="w-4 bg-primary rounded-t-sm flex-1"></div>
+                        </div>
+                        {{-- Bar Ditemukan + angka di atasnya --}}
+                        <div class="w-4 flex flex-col items-center justify-end" style="height: {{ $m['found_percent'] }}%">
+                            <span class="text-[10px] font-semibold text-secondary mb-1">{{ $m['found'] ?? 0 }}</span>
+                            <div class="w-4 bg-secondary/50 rounded-t-sm flex-1"></div>
+                        </div>
                         <span class="text-[10px] text-on-surface-variant mt-2">{{ $m['label'] }}</span>
                     </div>
                 @endforeach
