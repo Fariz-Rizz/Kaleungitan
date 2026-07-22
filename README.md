@@ -65,6 +65,7 @@ Setelah proses seeding, gunakan akun berikut untuk keperluan testing dan demo:
 | Email | Password | Role |
 |---|---|---|
 | admin@kaleungitan.test | password | admin |
+| Arys@user | arys12345 | user |
 
 Selain akun admin, seeder juga membuat 10 akun user dummy secara acak (lihat `database/seeders/UserSeeder.php`) untuk mengisi data laporan dan klaim.
 
