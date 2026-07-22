@@ -69,6 +69,8 @@ Setelah proses seeding, gunakan akun berikut untuk keperluan testing dan demo:
 
 Selain akun admin, seeder juga membuat 10 akun user dummy secara acak (lihat `database/seeders/UserSeeder.php`) untuk mengisi data laporan dan klaim.
 
+Link video teaser : https://youtu.be/nVLzKsyA2UY?si=bf5yArCh6yi23sA-
+
 ## Screenshot
 
 ![Dashboard Kaleungitan](Images_public/Images/Landing.png)
