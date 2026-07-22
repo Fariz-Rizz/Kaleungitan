@@ -70,4 +70,4 @@ Selain akun admin, seeder juga membuat 10 akun user dummy secara acak (lihat `da
 
 ## Screenshot
 
-![Dashboard Kaleungitan](Images_public/Images/Landing.png)
+![Dashboard Kaleungitan](/Images_public/Images/Landing.png)
