@@ -71,4 +71,4 @@ Selain akun admin, seeder juga membuat 10 akun user dummy secara acak (lihat `da
 
 ## Screenshot
 
-![alt teks](https://github.com/Fariz-Rizz/Kaleungitan/blob/main/Images_public/Images/Landing.png)
+![Dashboard Kaleungitan](Images_public/Images/Landing.png)
